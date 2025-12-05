@@ -1,0 +1,7 @@
+{
+  "name": "NatureLens: AI Wildlife Collector",
+  "description": "An intelligent wildlife collection app that uses Gemini to identify animals in photos and automatically sorts them into species-specific albums.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
