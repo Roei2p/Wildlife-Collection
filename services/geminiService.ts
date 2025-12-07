@@ -12,12 +12,13 @@ export const identifyCreature = async (base64Data: string, mimeType: string): Pr
     type: Type.OBJECT,
     properties: {
       species: { type: Type.STRING, description: "Common name of the animal or bird." },
+      category: { type: Type.STRING, description: "Broad category tag (e.g., Bird, Mammal, Reptile, Insect)." },
       scientificName: { type: Type.STRING, description: "Scientific Latin name." },
       confidence: { type: Type.NUMBER, description: "Confidence score between 0 and 1." },
-      description: { type: Type.STRING, description: "A brief visual description of the animal in the image." },
+      description: { type: Type.STRING, description: "A very short, concise description (max 15 words)." },
       habitat: { type: Type.STRING, description: "Typical habitat for this species." },
     },
-    required: ["species", "scientificName", "confidence", "description", "habitat"],
+    required: ["species", "category", "scientificName", "confidence", "description", "habitat"],
   };
 
   try {
@@ -32,7 +33,7 @@ export const identifyCreature = async (base64Data: string, mimeType: string): Pr
             },
           },
           {
-            text: "Identify the animal or bird in this picture clearly. If it is not an animal/bird, return 'Unknown' for species.",
+            text: "Identify the animal or bird in this picture. Provide a category tag and a very short description.",
           },
         ],
       },
@@ -97,5 +98,79 @@ export const getSpeciesDetails = async (species: string): Promise<{ summary: str
   } catch (error) {
     console.error("Search failed", error);
     return { summary: "Could not fetch online details." };
+  }
+};
+
+// 4. Generate Image (Creative Studio) - gemini-3-pro-image-preview
+export const generateWildlifeImage = async (
+  prompt: string, 
+  aspectRatio: string, 
+  imageSize: string
+): Promise<string> => {
+  const ai = getAI();
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-3-pro-image-preview',
+      contents: {
+        parts: [
+          { text: prompt }
+        ]
+      },
+      config: {
+        imageConfig: {
+          aspectRatio: aspectRatio as any,
+          imageSize: imageSize as any
+        }
+      }
+    });
+
+    // Extract image from response
+    for (const part of response.candidates?.[0]?.content?.parts || []) {
+      if (part.inlineData) {
+        return part.inlineData.data;
+      }
+    }
+    throw new Error("No image generated");
+  } catch (error) {
+    console.error("Image generation failed", error);
+    throw error;
+  }
+};
+
+// 5. Edit Image (Magic Editor) - gemini-2.5-flash-image
+export const editWildlifePhoto = async (
+  base64Data: string, 
+  mimeType: string, 
+  instruction: string
+): Promise<string> => {
+  const ai = getAI();
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-image',
+      contents: {
+        parts: [
+          {
+            inlineData: {
+              data: base64Data,
+              mimeType: mimeType,
+            },
+          },
+          {
+            text: instruction,
+          },
+        ],
+      },
+    });
+
+    // Extract edited image
+    for (const part of response.candidates?.[0]?.content?.parts || []) {
+      if (part.inlineData) {
+        return part.inlineData.data;
+      }
+    }
+    throw new Error("No edited image returned");
+  } catch (error) {
+    console.error("Image editing failed", error);
+    throw error;
   }
 };

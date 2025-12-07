@@ -9,7 +9,10 @@ import {
   Info, 
   ExternalLink,
   MapPin,
-  Leaf
+  Leaf,
+  Sparkles,
+  Palette,
+  Wand2
 } from 'lucide-react';
 
 export const Icons = {
@@ -22,5 +25,8 @@ export const Icons = {
   Info,
   Link: ExternalLink,
   MapPin,
-  Leaf
+  Leaf,
+  Sparkles,
+  Palette,
+  Wand: Wand2
 };

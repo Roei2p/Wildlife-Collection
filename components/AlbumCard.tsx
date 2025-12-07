@@ -42,6 +42,29 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ album, onClick }) => {
         <p className="text-sm text-gray-500 mt-1 line-clamp-2">
            {album.photos[0]?.analysis.scientificName || "Unknown Species"}
         </p>
+
+        {/* Gallery Preview */}
+        {album.photos.length > 0 && (
+          <div className="flex gap-2 mt-3">
+            {album.photos.slice(0, 3).map((photo) => (
+              <div 
+                key={photo.id} 
+                className="h-10 w-10 rounded-lg overflow-hidden border border-gray-100 shrink-0"
+              >
+                <img 
+                  src={photo.url} 
+                  alt="thumbnail" 
+                  className="w-full h-full object-cover" 
+                />
+              </div>
+            ))}
+            {album.photos.length > 3 && (
+              <div className="h-10 w-10 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center text-xs text-emerald-600 font-bold shrink-0">
+                 +{album.photos.length - 3}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

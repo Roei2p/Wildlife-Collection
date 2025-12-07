@@ -5,14 +5,15 @@ import { Icons } from './Icons';
 interface PhotoDetailProps {
   photo: Photo;
   onClose: () => void;
+  onEdit: () => void;
 }
 
-const PhotoDetail: React.FC<PhotoDetailProps> = ({ photo, onClose }) => {
+const PhotoDetail: React.FC<PhotoDetailProps> = ({ photo, onClose, onEdit }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-fade-in">
       <button 
         onClick={onClose}
-        className="absolute top-4 right-4 text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+        className="absolute top-4 right-4 text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors z-50"
       >
         <Icons.X className="w-8 h-8" />
       </button>
@@ -26,14 +27,24 @@ const PhotoDetail: React.FC<PhotoDetailProps> = ({ photo, onClose }) => {
             alt={photo.analysis.species} 
             className="max-h-full max-w-full object-contain"
           />
+          {photo.source === 'generated' && (
+            <div className="absolute top-4 left-4 bg-indigo-500/90 text-white text-xs px-2 py-1 rounded-md backdrop-blur-sm shadow-sm flex items-center gap-1">
+              <Icons.Sparkles className="w-3 h-3" /> AI Generated
+            </div>
+          )}
         </div>
 
         {/* Info Side */}
         <div className="w-full md:w-[400px] bg-white text-gray-800 overflow-y-auto flex flex-col">
           <div className="p-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase tracking-wide mb-4">
-              <Icons.Leaf className="w-3 h-3" />
-              {photo.analysis.confidence > 0.8 ? 'High Confidence' : 'Possible Match'}
+            <div className="flex flex-wrap gap-2 mb-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase tracking-wide">
+                <Icons.Leaf className="w-3 h-3" />
+                {photo.analysis.confidence > 0.8 ? 'Verified' : 'Possible'}
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold uppercase tracking-wide">
+                {photo.analysis.category || 'Wildlife'}
+              </div>
             </div>
             
             <h2 className="text-3xl font-bold text-gray-900 mb-1">{photo.analysis.species}</h2>
@@ -58,6 +69,16 @@ const PhotoDetail: React.FC<PhotoDetailProps> = ({ photo, onClose }) => {
                   {photo.analysis.habitat}
                 </p>
               </div>
+            </div>
+            
+            <div className="mt-10 pt-6 border-t border-gray-100">
+               <button 
+                 onClick={onEdit}
+                 className="w-full py-3 rounded-xl border border-purple-200 bg-purple-50 text-purple-700 font-bold flex items-center justify-center gap-2 hover:bg-purple-100 transition-colors shadow-sm"
+               >
+                 <Icons.Wand className="w-4 h-4" />
+                 Magic Editor
+               </button>
             </div>
           </div>
         </div>

@@ -50,8 +50,8 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onAnalyze, isAnalyzi
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-emerald-50/50">
           <h2 className="text-xl font-semibold text-emerald-900 flex items-center gap-2">
-            <Icons.Camera className="w-5 h-5 text-emerald-600" />
-            Add Sighting
+            <Icons.Upload className="w-5 h-5 text-emerald-600" />
+            Add to Album
           </h2>
           <button 
             onClick={onClose} 
@@ -87,8 +87,8 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onAnalyze, isAnalyzi
               <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Icons.Upload className="w-8 h-8" />
               </div>
-              <p className="text-lg font-medium text-gray-700">Click or drag photo here</p>
-              <p className="text-sm text-gray-500 mt-1">Supports JPG, PNG, WEBP</p>
+              <p className="text-lg font-medium text-gray-700">Select a photo</p>
+              <p className="text-sm text-gray-500 mt-1">Drag and drop or click to browse</p>
             </div>
           ) : (
             <div className="relative rounded-xl overflow-hidden shadow-md aspect-video bg-gray-100">
@@ -96,8 +96,8 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onAnalyze, isAnalyzi
               {isAnalyzing && (
                 <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white backdrop-blur-sm">
                   <Icons.Loader className="w-10 h-10 animate-spin mb-3" />
-                  <p className="font-medium text-lg">Identifying Species...</p>
-                  <p className="text-sm opacity-80">Using Gemini Vision Pro</p>
+                  <p className="font-medium text-lg">Identifying...</p>
+                  <p className="text-sm opacity-80">Categorizing for your album</p>
                 </div>
               )}
             </div>
@@ -118,7 +118,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onAnalyze, isAnalyzi
              disabled={!selectedFile || isAnalyzing}
              className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-lg shadow-emerald-200 transition-all flex items-center gap-2 disabled:opacity-50 disabled:shadow-none"
            >
-             {isAnalyzing ? 'Analyzing...' : 'Analyze & Sort'}
+             {isAnalyzing ? 'Processing...' : 'Add to Album'}
              {!isAnalyzing && <Icons.Search className="w-4 h-4" />}
            </button>
         </div>
